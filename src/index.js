@@ -1,6 +1,6 @@
 module.exports = function toReadable(number) {
-    let digits = number - Math.floor(number / 10) * 10;
-    let decads = (number - Math.floor(number / 100) * 100 - digits) / 10;
+    let digits = number%10;
+    let decads = (number%100-number%10)/10;
     let hundreds = Math.floor(number / 100);
     let arrayDigits = [
         "",
@@ -33,7 +33,7 @@ module.exports = function toReadable(number) {
         "fifty",
         "sixty",
         "seventy",
-        "eigthy",
+        "eighty",
         "ninety",
     ];
 
@@ -44,14 +44,18 @@ module.exports = function toReadable(number) {
     } else if (hundreds == 0 && decads < 2) {
         return `${arrayDigits[number]}`;
     } else if (hundreds == 0 && decads > 1) {
+        if (digits == 0) {
+            return `${arrayDecads[decads]}`;
+        }
         return `${arrayDecads[decads]} ${arrayDigits[digits]}`;
-        // } else if (number % 100 == 0 && hundreds !== 0) {
-        //     return `${arrayDigits[hundreds]} hundred`;
+    } else if (hundreds > 0 && decads == 0 && digits == 0) {
+        return `${arrayDigits[hundreds]} hundred`;
     } else if (hundreds > 0 && decads < 2) {
-        return `${arrayDigits[hundreds]} hundred ${
-            arrayDigits[decads * 10 + digits]
-        }`;
+        return `${arrayDigits[hundreds]} hundred ${arrayDigits[decads * 10 + digits]}`;
     } else if (hundreds > 0 && decads > 1) {
-        return `${arrayDigits[hundreds]} hundred ${arrayDecads[decads]} ${arrayDigits[digits]}`;
+        if (digits == 0) {
+            return `${arrayDigits[hundreds]} hundred ${arrayDecads[decads]}`
+        }
+            return `${arrayDigits[hundreds]} hundred ${arrayDecads[decads]} ${arrayDigits[digits]}`;
     }
 };
